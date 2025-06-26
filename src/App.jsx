@@ -19,11 +19,12 @@ function App() {
     <Router>
       <Routes>
         <Route element={<Layout />}>
+          <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/fixtures_and_predictions" element={<FixturesAndPredictions />} />
           <Route path="/join_league" element={<JoinLeague />} />
           <Route path="/loader_page" element={<LoaderPage />} />
-          <Route path="/login" element={<Login />} />
+          
           <Route path="/my_leagues" element={<MyLeagues />} />
           <Route path="/private_league" element={<PrivateLeague />} />
           <Route path="/register" element={<Register />} />

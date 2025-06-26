@@ -96,7 +96,7 @@ export default function Register() {
           </button>
           <p className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <a href="/login" className="text-sky-400 underline">
+            <a href="/" className="text-sky-400 underline">
               Login
             </a>
           </p>
