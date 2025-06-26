@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+
+
+/* Custom styles */
+.gradient-bg {
+  background: linear-gradient(135deg, #4ADE80, #06B6D4);
+}
+/* Responsive Container */
+.container {
+
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Mobile-first Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
