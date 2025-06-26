@@ -36,7 +36,7 @@ export default function Layout({ children }) {
         <Link to="/leaderboard" className="flex flex-col items-center text-xs hover:text-emerald-400">
           <FaListOl className="text-lg" />Leaderboard
         </Link>
-        <Link to="/user_profile" className="flex flex-col items-center text-xs hover:text-emerald-400">
+        <Link to="/profile" className="flex flex-col items-center text-xs hover:text-emerald-400">
           <FaUser className="text-lg" />Profile
         </Link>
       </nav>
