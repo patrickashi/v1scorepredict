@@ -20,6 +20,19 @@ export default function Layout({ children }) {
           <Link to="/profile" className="hover:text-emerald-300">Profile</Link>
         </div>
       </nav>
+
+      {/* topnav for mobile */}
+      <nav className="flex md:hidden items-center justify-center px-8 py-4 border-b border-[#181730]">
+        <Link to="/dashboard">
+            <div className="flex items-center gap-2">
+                <FaFutbol className="text-emerald-300 text-2xl" />
+                <span className="text-emerald-300 text-2xl font-bold">VI-Predict</span>
+            </div>
+        </Link>
+        
+      </nav>
+
+
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center w-full">
         {/* Use children if you wrap routes, or <Outlet /> if using nested routes */}
