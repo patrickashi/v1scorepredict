@@ -41,9 +41,7 @@ export default function Layout({ children }) {
       </main>
 
       {/* Bottom Nav (mobile) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 
-                      bg-neon.dark border-t border-black 
-                      flex justify-around py-2 z-10">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0  bg-[#0B2C0E] flex justify-around py-2 z-10">
         <Link to="/fixtures_and_predictions" className="flex flex-col items-center text-sm hover:text-neon">
           <FaFutbol className="text-lg" />Fixtures
         </Link>

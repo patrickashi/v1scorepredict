@@ -10,18 +10,18 @@ export default function FixturesAndPredictions() {
     }));
   };
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center py-8">
+    <div className="min-h-screen  bg-black text-white flex flex-col items-center py-8">
       
-      <h1 className="text-3xl font-bold mb-6">Fixtures & Predictions</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-12">Fixtures & Predictions</h1>
       <div className="flex gap-4 mb-6">
-        <select className="bg-[#23FF00] text-gray-800 px-4 py-2 rounded">
+        <select className="bg-[#23FF00] text-black px-4 py-2 rounded">
           <option>Gameweek</option>
         </select>
-        <select className="bg-[#23FF00] text-gray-800 px-4 py-2 rounded">
+        <select className="bg-[#23FF00] text-black px-4 py-2 rounded">
           <option>Gameweek 1</option>
         </select>
       </div>
-      <div className="bg-[#E7FFE7] rounded-xl p-6 w-full max-w-lg mb-8 text-black">
+      <div className="bg-[#E7FFE7] rounded-xl p-6 w-80 md:w-126 max-w-lg mb-8 text-black">
         <div className=" text-lg mb-4">03:12:09 left to predict</div>
         {/* Dummy fixtures */}
         {[
@@ -54,7 +54,7 @@ export default function FixturesAndPredictions() {
           </div>
         ))}
       </div>
-      <button className="w-full max-w-lg bg-[#23FF00] text-black font-bold py-3 rounded-lg shadow hover:from-emerald-300 hover:to-emerald-400 transition">
+      <button className="w-80 md:w-126 max-w-lg bg-[#23FF00] text-black font-bold py-3 rounded-lg shadow hover:from-emerald-300 hover:to-emerald-400 transition">
         Save Predictions
       </button>
     </div>
