@@ -41,7 +41,7 @@ export default function FixturesAndPredictions() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center py-8">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center pt-8 pb-20 md:pb-0">
 
       <h1 className="text-2xl md:text-3xl font-bold mt-14 md:mt-0 mb-4">
         Fixtures & Predictions
