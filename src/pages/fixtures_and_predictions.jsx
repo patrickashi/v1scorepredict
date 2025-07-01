@@ -3,8 +3,8 @@ import { useState } from "react"
 
 // 1) Import your club logos
 import newcastle from "../assets/newcastle.jpeg"
-import brighton from "../assets/brighton.jpeg"
-import mancity from "../assets/mancity.jpeg"
+import brighton  from "../assets/brighton.jpeg"
+import mancity   from "../assets/mancity.jpeg"
 import liverpool from "../assets/liverpool.jpeg"
 // …and so on for all teams
 
@@ -33,11 +33,38 @@ export default function FixturesAndPredictions() {
     }, {})
   )
 
+  // UI state for saving status
+  const [isSaving, setIsSaving] = useState(false)
+  const [saved, setSaved]     = useState(false)
+
   const handleChange = (id, idx, value) => {
     setPredictions(prev => ({
       ...prev,
       [id]: prev[id].map((v, i) => (i === idx ? value : v))
     }))
+  }
+
+  const handleSave = async () => {
+    setIsSaving(true)
+    setSaved(false)
+
+    // --- HERE is where you would call your real API ---
+    // e.g.
+    // try {
+    //   await api.post('/predictions', { predictions })
+    // } catch(err) {
+    //   console.error("Save failed:", err)
+    // }
+    // --------------------------------------------------
+
+    // simulate network latency
+    setTimeout(() => {
+      setIsSaving(false)
+      setSaved(true)
+
+      // clear the “Saved!” after 3s
+      setTimeout(() => setSaved(false), 3000)
+    }, 1000)
   }
 
   return (
@@ -67,13 +94,11 @@ export default function FixturesAndPredictions() {
           <div key={f.id} className="mb-0">
             {/* date row */}
             <div className="flex justify-center items-center mb-2">
-              {/* <span className="font-medium">{f.home.code}</span> */}
               <span className="text-gray-700">{f.date}</span>
-              {/* <span className="font-medium">{f.away.code}</span> */}
             </div>
 
             {/* match + inputs */}
-            <div className=" rounded-lg p-4 flex flex-col md:items-center md:justify-between gap-4">
+            <div className="rounded-lg p-4 flex flex-col md:items-center md:justify-between gap-4">
               {/* teams */}
               <div className="flex items-center justify-center gap-2">
                 <span className="text-xs md:text-sm">{f.home.name}</span>
@@ -82,9 +107,7 @@ export default function FixturesAndPredictions() {
                   alt={f.home.name}
                   className="h-6 w-6 object-contain"
                 />
-                {/* ----------------------------------------- */}
                 <span className="mx-2">vs</span>
-                {/* ------------------------------------------ */}
                 <img
                   src={f.away.logo}
                   alt={f.away.name}
@@ -104,11 +127,11 @@ export default function FixturesAndPredictions() {
                     handleChange(f.id, 0, Number(e.target.value))
                   }
                 />
-                <span className=" ">–</span>
+                <span className="">–</span>
                 <input
                   type="number"
                   min={0}
-                  className="w-12 text-center bg-white text-black rounded p-2 "
+                  className="w-12 text-center bg-white text-black rounded p-2"
                   value={predictions[f.id][1]}
                   onChange={e =>
                     handleChange(f.id, 1, Number(e.target.value))
@@ -120,9 +143,24 @@ export default function FixturesAndPredictions() {
         ))}
       </div>
 
-      {/* save button */}
-      <button className="w-80 md:w-[32rem] max-w-lg bg-[#23FF00] text-black font-bold py-3 rounded-lg shadow transition hover:bg-[#39FF14]">
-        Save Predictions
+      {/* save button + status */}
+      <button
+        onClick={handleSave}
+        disabled={isSaving}
+        className={`
+          w-80 md:w-[32rem] max-w-lg 
+          bg-[#23FF00] 
+          text-black font-semibold py-3 
+          rounded-lg shadow 
+          transition 
+          ${isSaving ? "opacity-60 cursor-not-allowed" : "hover:bg-[#39FF14]"}  
+        `}
+      >
+        {isSaving
+          ? "Saving..."
+          : saved
+            ? "Saved!"
+            : "Save Predictions"}
       </button>
     </div>
   )
