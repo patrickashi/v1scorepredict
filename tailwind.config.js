@@ -6,10 +6,14 @@ export default {
   ],
 theme: {
   extend: {
-    backgroundImage: {
-      'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-      'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-    },
+    colors: {
+        neon: {
+          dark: '#0B2C0E',   // header/nav background
+          DEFAULT: '#23FF00',// primary “bright” green
+          light: '#39FF14',  // hover / highlights
+          50: '#E7FFE7',     // very light green for table rows
+        }
+    }
   },
 },
   plugins: [],

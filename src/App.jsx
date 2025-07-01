@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import CreateLeague from "./pages/create_league";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import Home from "./pages/Home";
 // ...import other pages
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/fixtures_and_predictions" element={<FixturesAndPredictions />} />
           <Route path="/join_league" element={<JoinLeague />} />
           <Route path="/loader_page" element={<LoaderPage />} />
