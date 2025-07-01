@@ -4,7 +4,7 @@ import { Link, Outlet } from 'react-router-dom';
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen bg-[#0B2C0E] text-white flex flex-col">
+    <div className=" min-h-screen bg-[#0B2C0E] text-white flex flex-col">
       {/* Top Nav (desktop) */}
       <nav className="hidden md:flex items-center justify-between px-6 py-4 bg-neon.dark">
         <Link to="/dashboard">
@@ -23,9 +23,7 @@ export default function Layout({ children }) {
       </nav>
 
       {/* Top Nav (mobile) */}
-      <nav className="flex md:hidden items-center justify-between 
-                      px-6 py-4 
-                      bg-neon.dark">
+      <nav className="flex fixed top-0 left-0 right-0 md:hidden bg-[#0B2C0E] items-center justify-between px-6 py-4 ">
         <Link to="/dashboard">
           <div className="flex items-center gap-2">
             <FaFutbol className="text-neon text-2xl" />
