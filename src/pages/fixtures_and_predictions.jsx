@@ -12,7 +12,7 @@ export default function FixturesAndPredictions() {
   return (
     <div className="min-h-screen  bg-black text-white flex flex-col items-center py-8">
       
-      <h1 className="text-2xl md:text-3xl font-bold mb-12">Fixtures & Predictions</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-8">Fixtures & Predictions</h1>
       <div className="flex gap-4 mb-6">
         <select className="bg-[#23FF00] text-black px-4 py-2 rounded">
           <option>Gameweek</option>
