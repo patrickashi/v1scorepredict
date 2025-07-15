@@ -20,7 +20,7 @@ function App() {
     <Router>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Login />} />
+          
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/home" element={<Home />} />
           <Route path="/fixtures_and_predictions" element={<FixturesAndPredictions />} />
@@ -29,13 +29,15 @@ function App() {
           
           <Route path="/my_leagues" element={<MyLeagues />} />
           <Route path="/private_league" element={<PrivateLeague />} />
-          <Route path="/register" element={<Register />} />
+          
           <Route path="/create_league" element={<CreateLeague />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/profile" element={<UserProfilePage />} />
           {/* ...other routes */}
         </Route>
         {/* ...auth routes, etc */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
