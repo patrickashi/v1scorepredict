@@ -11,6 +11,7 @@ export default function Register() {
   });
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [subscribeEmails, setSubscribeEmails] = useState(false);
@@ -19,22 +20,94 @@ export default function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  // Regular registration with Django backend
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     if (!form.firstName || !form.lastName || !form.email || !form.password) {
       setError("Please fill all required fields.");
+      setLoading(false);
       return;
     }
     if (!agreeTerms) {
       setError("Please agree to the Terms and Conditions.");
+      setLoading(false);
       return;
     }
-    setError("");
-    alert("Register: " + JSON.stringify(form));
+
+    try {
+      // TODO: Replace with actual Django API endpoint
+      const response = await fetch('/api/auth/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add CSRF token if needed: 'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({
+          first_name: form.firstName,
+          last_name: form.lastName,
+          email: form.email,
+          password: form.password,
+          agree_terms: agreeTerms,
+          subscribe_emails: subscribeEmails,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Registration successful
+        // TODO: Handle successful registration (redirect, show success message, etc.)
+        alert("Registration successful! Please check your email for verification.");
+        // Example: navigate('/dashboard') or navigate('/verify-email')
+      } else {
+        // Handle validation errors from Django
+        if (data.errors) {
+          setError(Object.values(data.errors).flat().join(', '));
+        } else {
+          setError(data.message || "Registration failed. Please try again.");
+        }
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    alert("Google Sign Up clicked");
+  // Google OAuth registration
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      // TODO: Replace with actual Django Google OAuth endpoint
+      const response = await fetch('/api/auth/google/signup/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscribe_emails: subscribeEmails,
+          agree_terms: agreeTerms,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Redirect to Google OAuth
+        window.location.href = data.auth_url;
+      } else {
+        setError(data.message || "Google signup failed. Please try again.");
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,6 +141,7 @@ export default function Register() {
                 placeholder="yemisiojo@gmail.com"
                 value={form.email}
                 onChange={handleChange}
+                disabled={loading}
               />
             </div>
 
@@ -82,11 +156,13 @@ export default function Register() {
                   placeholder="••••••••••"
                   value={form.password}
                   onChange={handleChange}
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
                 >
                   {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                 </button>
@@ -104,6 +180,7 @@ export default function Register() {
                   placeholder="First Name"
                   value={form.firstName}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
               <div>
@@ -115,6 +192,7 @@ export default function Register() {
                   placeholder="Last Name"
                   value={form.lastName}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -128,6 +206,7 @@ export default function Register() {
                   className="mt-1 w-4 h-4 text-green-600 bg-transparent border-2 border-white/30 rounded focus:ring-green-500 focus:ring-2"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
+                  disabled={loading}
                 />
                 <label htmlFor="terms" className="text-white text-sm">
                   I have read and agree to the <span className="underline">Terms and Conditions</span>
@@ -140,6 +219,7 @@ export default function Register() {
                   className="mt-1 w-4 h-4 text-green-600 bg-transparent border-2 border-white/30 rounded focus:ring-green-500 focus:ring-2"
                   checked={subscribeEmails}
                   onChange={(e) => setSubscribeEmails(e.target.checked)}
+                  disabled={loading}
                 />
                 <label htmlFor="emails" className="text-white text-sm">
                   I would like to receive emails from VI-Predict, which include Matchday, Leaderboard, Site Banter and Important announcement.
@@ -156,10 +236,34 @@ export default function Register() {
             {/* Create Account Button */}
             <button
               onClick={handleSubmit}
-              className="w-full bg-white text-green-600 font-semibold py-4 rounded-lg shadow-lg hover:bg-gray-100 transition-colors"
+              disabled={loading}
+              className="w-full bg-white text-green-600 font-semibold py-4 rounded-lg shadow-lg hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create account
+              {loading ? "Creating account..." : "Create account"}
             </button>
+
+            {/* Or Divider */}
+            <div className="flex items-center my-6">
+              <div className="flex-1 h-px bg-white/30"></div>
+              <span className="px-4 text-white text-sm">Or</span>
+              <div className="flex-1 h-px bg-white/30"></div>
+            </div>
+
+            {/* Google Sign Up */}
+            <button
+              onClick={handleGoogleSignUp}
+              disabled={loading || !agreeTerms}
+              className="w-full bg-transparent border-2 border-white/30 text-white font-semibold py-4 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FaGoogle className="text-white" />
+              <span>{loading ? "Processing..." : "Sign up with Google"}</span>
+            </button>
+
+            {!agreeTerms && (
+              <p className="text-white/70 text-xs text-center">
+                Please agree to the Terms and Conditions to use Google signup
+              </p>
+            )}
 
             {/* Footer Links */}
             <div className="text-center mt-2">

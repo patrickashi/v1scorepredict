@@ -9,24 +9,92 @@ export default function Login() {
   });
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  // Regular login with Django backend
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     if (!form.email || !form.password) {
       setError("Please fill all fields.");
+      setLoading(false);
       return;
     }
-    setError("");
-    alert("Login: " + JSON.stringify(form));
+
+    try {
+      // TODO: Replace with actual Django API endpoint
+      const response = await fetch('/api/auth/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add CSRF token if needed: 'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Login successful
+        // TODO: Store authentication token (JWT or session)
+        // localStorage.setItem('authToken', data.token); // For JWT
+        // or handle session-based auth
+        
+        // TODO: Handle successful login (redirect to dashboard)
+        alert("Login successful!");
+        // Example: navigate('/dashboard')
+      } else {
+        // Handle login errors from Django
+        if (data.errors) {
+          setError(Object.values(data.errors).flat().join(', '));
+        } else {
+          setError(data.message || "Login failed. Please check your credentials.");
+        }
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    alert("Google Sign In clicked");
+  // Google OAuth login
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      // TODO: Replace with actual Django Google OAuth endpoint
+      const response = await fetch('/api/auth/google/signin/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Redirect to Google OAuth
+        window.location.href = data.auth_url;
+      } else {
+        setError(data.message || "Google sign in failed. Please try again.");
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,6 +128,7 @@ export default function Login() {
                 placeholder="yemisiojo@gmail.com"
                 value={form.email}
                 onChange={handleChange}
+                disabled={loading}
               />
             </div>
 
@@ -74,11 +143,13 @@ export default function Login() {
                   placeholder="••••••••••"
                   value={form.password}
                   onChange={handleChange}
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
                 >
                   {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                 </button>
@@ -94,9 +165,10 @@ export default function Login() {
             {/* Sign In Button */}
             <button
               onClick={handleSubmit}
-              className="w-full bg-white text-green-600 font-semibold py-4 rounded-lg shadow-lg hover:bg-gray-100 transition-colors"
+              disabled={loading}
+              className="w-full bg-white text-green-600 font-semibold py-4 rounded-lg shadow-lg hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
 
             {/* Or Divider */}
@@ -109,15 +181,20 @@ export default function Login() {
             {/* Google Sign In */}
             <button
               onClick={handleGoogleSignIn}
-              className="w-full bg-transparent border-2 border-white/30 text-white font-semibold py-4 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-center space-x-2"
+              disabled={loading}
+              className="w-full bg-transparent border-2 border-white/30 text-white font-semibold py-4 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FaGoogle className="text-white" />
-              <span>Sign up with Google</span>
+              <span>{loading ? "Processing..." : "Sign in with Google"}</span>
             </button>
 
             {/* Footer Links */}
             <div className="text-center space-y-2 mt-6">
-              <div className="text-white/80 text-sm">Having trouble signing in?</div>
+              <div className="text-white/80 text-sm">
+                <a href="/forgot-password" className="text-white underline hover:text-white/80">
+                  Forgot your password?
+                </a>
+              </div>
               <div className="text-white/80 text-sm">
                 No account? <a href="/register" className="text-white underline font-semibold">Join now</a>
               </div>
