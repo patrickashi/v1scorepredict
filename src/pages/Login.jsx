@@ -47,7 +47,7 @@ export default function Login() {
 
         {/* Login Form */}
         <div className="w-full max-w-md">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8">Sign in</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-16 mb-8">Sign in</h1>
           
           <div className="space-y-6">
             {/* Email Field */}

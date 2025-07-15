@@ -162,7 +162,7 @@ export default function Register() {
             </button>
 
             {/* Footer Links */}
-            <div className="text-center mt-6">
+            <div className="text-center mt-2">
               <div className="text-white/80 text-sm">
                 Already have an account? <a href="/" className="text-white underline font-semibold">Sign in</a>
               </div>
