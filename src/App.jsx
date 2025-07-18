@@ -13,12 +13,14 @@ import CreateLeague from "./pages/create_league";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
 // ...import other pages
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route element={<Layout />}>
           
           <Route path="/dashboard" element={<Dashboard />} />
@@ -36,7 +38,7 @@ function App() {
           {/* ...other routes */}
         </Route>
         {/* ...auth routes, etc */}
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
