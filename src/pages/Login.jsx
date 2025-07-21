@@ -1,5 +1,6 @@
+// src/pages/Login.jsx
 import { useState } from "react";
-import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Removed FaGoogle
 import soccer_players1 from "../assets/soccer_players1.png";
 
 export default function Login() {
@@ -34,7 +35,6 @@ export default function Login() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Add CSRF token if needed: 'X-CSRFToken': getCsrfToken(),
         },
         body: JSON.stringify({
           email: form.email,
@@ -45,16 +45,11 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Login successful
-        // TODO: Store authentication token (JWT or session)
-        // localStorage.setItem('authToken', data.token); // For JWT
-        // or handle session-based auth
-        
-        // TODO: Handle successful login (redirect to dashboard)
+        // TODO: Handle successful login (store token, redirect)
         alert("Login successful!");
-        // Example: navigate('/dashboard')
+        // Example: localStorage.setItem('authToken', data.token);
+        //          navigate('/dashboard');
       } else {
-        // Handle login errors from Django
         if (data.errors) {
           setError(Object.values(data.errors).flat().join(', '));
         } else {
@@ -68,34 +63,7 @@ export default function Login() {
     }
   };
 
-  // Google OAuth login
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      // TODO: Replace with actual Django Google OAuth endpoint
-      const response = await fetch('/api/auth/google/signin/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redirect to Google OAuth
-        window.location.href = data.auth_url;
-      } else {
-        setError(data.message || "Google sign in failed. Please try again.");
-      }
-    } catch (err) {
-      setError("Network error. Please check your connection and try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // REMOVED: The handleGoogleSignIn function is no longer needed.
 
   return (
     <div className="min-h-screen flex">
@@ -115,9 +83,9 @@ export default function Login() {
 
         {/* Login Form */}
         <div className="w-full max-w-md">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-16 mb-8">Sign in</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mt-10 mb-8 text-center md:text-start">Sign in</h1>
           
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
               <label className="block text-white text-sm mb-2">Email address</label>
@@ -129,6 +97,7 @@ export default function Login() {
                 value={form.email}
                 onChange={handleChange}
                 disabled={loading}
+                required
               />
             </div>
 
@@ -144,6 +113,7 @@ export default function Login() {
                   value={form.password}
                   onChange={handleChange}
                   disabled={loading}
+                  required
                 />
                 <button
                   type="button"
@@ -157,39 +127,24 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="text-red-200 text-sm bg-red-500/20 p-3 rounded-lg">
+              <div className="text-red-200 text-sm bg-red-500/20 p-3 rounded-lg text-center">
                 {error}
               </div>
             )}
 
             {/* Sign In Button */}
             <button
-              onClick={handleSubmit}
+              type="submit"
               disabled={loading}
               className="w-full bg-white text-green-600 font-semibold py-4 rounded-lg shadow-lg hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
 
-            {/* Or Divider */}
-            <div className="flex items-center my-6">
-              <div className="flex-1 h-px bg-white/30"></div>
-              <span className="px-4 text-white text-sm">Or</span>
-              <div className="flex-1 h-px bg-white/30"></div>
-            </div>
-
-            {/* Google Sign In */}
-            <button
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-              className="w-full bg-transparent border-2 border-white/30 text-white font-semibold py-4 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <FaGoogle className="text-white" />
-              <span>{loading ? "Processing..." : "Sign in with Google"}</span>
-            </button>
+            {/* REMOVED: "Or" Divider and Google Sign In button */}
 
             {/* Footer Links */}
-            <div className="text-center space-y-2 mt-6">
+            <div className="text-center space-y-2 pt-4">
               <div className="text-white/80 text-sm">
                 <a href="/forgot-password" className="text-white underline hover:text-white/80">
                   Forgot your password?
@@ -199,59 +154,29 @@ export default function Login() {
                 No account? <a href="/register" className="text-white underline font-semibold">Join now</a>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
 
-      {/* Right Side - Promotional Content */}
+      {/* Right Side - Promotional Content (Unchanged) */}
       <div className="hidden lg:flex w-1/2 bg-gray-900 flex-col items-center justify-center p-8 relative overflow-hidden">
-        {/* Background gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900"></div>
-        
-        {/* Content */}
         <div className="relative z-10 text-center max-w-md">
           <h2 className="text-4xl font-bold text-white mb-6">Your Throne Awaits</h2>
-          
-          {/* Soccer Image */}
           <div className="mb-8 relative">
             <div className="rounded-2xl overflow-hidden shadow-2xl">
               <img 
                 src={soccer_players1}
                 alt="Soccer players competing"
                 className="w-full h-64 object-cover"
-                onError={(e) => {
-                  // Fallback to mock design if image fails to load
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'block';
-                }}
+                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
               />
-              {/* Fallback mock design */}
-              <div className="bg-gradient-to-r from-red-600 to-blue-600 p-8 shadow-2xl hidden">
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center">
-                    <div className="w-16 h-16 bg-blue-400 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">P1</span>
-                    </div>
-                  </div>
-                  <div className="text-white font-bold text-lg">VS</div>
-                  <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center">
-                    <div className="w-16 h-16 bg-red-400 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">P2</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 h-2 bg-green-500 rounded-full relative">
-                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full"></div>
-                </div>
-              </div>
+              <div className="bg-gradient-to-r from-red-600 to-blue-600 p-8 shadow-2xl hidden">{/* Fallback */}</div>
             </div>
           </div>
-          
           <p className="text-gray-300 text-lg leading-relaxed mb-8">
             Gear up, Manager! You've just stepped into the ultimate fantasy battleground. Assemble your dream squad, outsmart rivals, and claim glory. Every transfer, every gamble, every scream-at-the-screen moment starts here.
           </p>
-
-          {/* Navigation dots */}
           <div className="flex justify-center space-x-2">
             <div className="w-3 h-3 bg-white rounded-full"></div>
             <div className="w-3 h-3 bg-white/30 rounded-full"></div>

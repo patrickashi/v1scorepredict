@@ -8,7 +8,7 @@ theme: {
   extend: {
     colors: {
         neon: {
-          dark: '#0B2C0E',   // header/nav background
+          dark: '#23FF00',   // header/nav background
           DEFAULT: '#23FF00',// primary “bright” green
           light: '#39FF14',  // hover / highlights
           50: '#E7FFE7',     // very light green for table rows

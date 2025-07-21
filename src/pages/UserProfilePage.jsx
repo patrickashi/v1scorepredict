@@ -1,66 +1,90 @@
 // src/pages/UserProfilePage.jsx
-import { FaUser, FaSun, FaSignOutAlt } from "react-icons/fa";
-import Layout from "../components/Layout";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  FaUser, FaSignOutAlt, FaShieldAlt, FaEdit, FaTrophy, 
+  FaChartBar, FaBullseye, FaBrain 
+} from "react-icons/fa";
+import liverpool from '../assets/liverpool.jpeg'; // Make sure this path is correct
 
-const gradientText = "bg-gradient-to-r from-emerald-300 to-sky-500 bg-clip-text text-transparent";
+// --- Reusable Content-Only Components ---
+const ProfileStat = ({ icon, label, value }) => (
+  <div className="bg-black/20 rounded-lg p-4 text-center">
+    <div className="text-2xl text-brand-light mb-1">{icon}</div>
+    <div className="text-xl font-bold text-white">{value}</div>
+    <div className="text-xs text-brand-gray">{label}</div>
+  </div>
+);
 
+// --- The Main UserProfilePage Component ---
 export default function UserProfilePage() {
-  // Dummy user data
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    points: 85,
-    accuracy: 68,
-    predictions: 32,
-    exact: 3,
-  };
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    // TODO: Replace this with an API call to fetch the logged-in user's data
+    const dummyUser = {
+      name: "Alex R.",
+      email: "alex.r@example.com",
+      avatar: liverpool, // The imported image
+      stats: {
+        totalPoints: 1200,
+        accuracy: "65%",
+        predictions: 100,
+        exactScores: 9,
+      }
+    };
+    setUser(dummyUser);
+  }, []);
+
+  // Render a loading state while user data is being fetched
+  if (!user.stats) {
+    return <div className="text-center text-brand-gray p-10">Loading Profile...</div>;
+  }
 
   return (
-  
-      <div className="flex flex-col items-center justify-center w-full min-h-[80vh] px-2 py-8">
-        <div className="w-full max-w-md bg-[#181730] rounded-2xl shadow-lg p-6 md:p-10 flex flex-col items-center">
-          {/* App Brand */}
-          <div className="flex items-center gap-2 mb-6">
-            <span className={`font-bold text-2xl md:text-3xl ${gradientText}`}>VI</span>
-            <span className={`font-bold text-2xl md:text-3xl ${gradientText}`}>VI-Predict</span>
+    // This is a pure content component. The <Layout> in App.jsx provides the frame.
+    <div className="flex flex-col items-center justify-start w-full">
+      <div className="w-full max-w-xl mt-10 mb-10">
+        {/* Main Profile Card */}
+        <div className="bg-green-500 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-white/10 text-center">
+          
+          {/* Avatar and Edit Button */}
+          <div className="relative w-24 h-24 mx-auto mb-4">
+            <img 
+              src={user.avatar}
+              alt="User Avatar"
+              className="w-full h-full rounded-full object-cover border-4 border-white/20"
+            />
+            <button className="absolute bottom-0 right-0 w-8 h-8 bg-white text-brand-dark rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+              <FaEdit />
+            </button>
           </div>
-          {/* Avatar */}
-          <div className="w-20 h-20 rounded-full bg-[#23213a] flex items-center justify-center mb-3">
-            <FaUser className={`text-4xl ${gradientText}`} />
+
+          {/* User Info */}
+          <h1 className="text-2xl font-bold text-white">{user.name}</h1>
+          <p className="text-brand-gray mb-6">{user.email}</p>
+
+          {/* User Stats Grid */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <ProfileStat icon={<FaTrophy />} label="Total Points" value={user.stats.totalPoints} />
+            <ProfileStat icon={<FaChartBar />} label="Accuracy" value={user.stats.accuracy} />
+            <ProfileStat icon={<FaBrain />} label="Predictions" value={user.stats.predictions} />
+            <ProfileStat icon={<FaBullseye />} label="Exact Scores" value={user.stats.exactScores} />
           </div>
-          {/* Name & Email */}
-          <div className="text-xl md:text-2xl font-bold mb-1">{user.name}</div>
-          <div className="text-sm text-gray-400 mb-6">{user.email}</div>
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-4 w-full mb-8">
-            <ProfileStat label="Total Points" value={user.points} />
-            <ProfileStat label="Accuracy" value={user.accuracy + "%"} />
-            <ProfileStat label="Predictions" value={user.predictions} />
-            <ProfileStat label="Exact" value={user.exact} />
-          </div>
-          {/* Settings */}
-          <div className="w-full">
-            <div className="font-semibold text-gray-300 mb-2">Settings</div>
-            <div className="flex items-center gap-2 bg-[#23213a] rounded-lg px-4 py-3 mb-3">
-              <FaSun className={`text-xl ${gradientText}`} />
-              <span className="text-gray-200">Light theme</span>
-            </div>
-            <button className="flex items-center gap-2 bg-[#23213a] rounded-lg px-4 py-3 w-full font-semibold text-gray-200 hover:bg-[#23213a]/80 transition">
-              <FaSignOutAlt className={`text-xl ${gradientText}`} />
-              Log out
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <Link to="/settings" className="w-full flex items-center justify-center gap-3 bg-black/20 text-brand-light font-semibold py-3 rounded-lg hover:bg-black/30 transition-colors">
+              <FaShieldAlt />
+              <span>Account & Security</span>
+            </Link>
+            <button className="w-full flex items-center justify-center gap-3 bg-red-500/20 text-red-300 font-semibold py-3 rounded-lg hover:bg-red-500/40 transition-colors">
+              <FaSignOutAlt />
+              <span>Log Out</span>
             </button>
           </div>
         </div>
       </div>
-   
-  );
-}
-
-function ProfileStat({ label, value }) {
-  return (
-    <div className="flex flex-col items-center justify-center bg-[#23213a] rounded-lg p-4 w-full">
-      <span className={`font-bold text-lg md:text-xl ${gradientText}`}>{value}</span>
-      <span className="text-xs text-gray-400">{label}</span>
     </div>
   );
 }

@@ -1,107 +1,127 @@
-// pages/dashboard.jsx
-import Layout from "../components/Layout";
-import { FaUser, FaTrophy, FaCalendarAlt, FaFutbol } from "react-icons/fa";
+// src/pages/Dashboard.jsx
+// *** NOTICE: NO 'import Layout' HERE ***
+
+import { FaTrophy, FaCalculator, FaFutbol, FaFire } from "react-icons/fa";
+import { WiSnowflakeCold } from "react-icons/wi";
 import { useEffect, useState } from "react";
 
+// --- Reusable Content-Only Components ---
+const StatCard = ({ icon, label, value }) => (
+  <div className="flex flex-col items-center justify-center bg-green-500 rounded-lg p-4 text-center transition-transform hover:scale-105">
+    <span className="text-3xl mb-2 text-green-100">{icon}</span>
+    <span className="text-3xl font-bold mb-1 text-white">{value}</span>
+    <span className="text-sm text-gray-100 font-semibold">{label}</span>
+  </div>
+);
+
+// --- The Dashboard Page Component ---
+// This is now a simple component that returns ONLY the page's content.
 export default function Dashboard() {
-  // Dummy data
-  const [stats, setStats] = useState({
-    users: 1248,
-    leagues: 56,
-    gameweeks: 38,
-    matches: 380,
-  });
-  const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState([]);
+  const [teams, setTeams] = useState({ hot: [], cold: [] });
+  // =========================================================================
+  //  API DATA POINT 1: The 'gameweeks' state will hold your table data from the API.
+  // =========================================================================
   const [gameweeks, setGameweeks] = useState([]);
-  const [matches, setMatches] = useState([]);
 
   useEffect(() => {
-    // TODO: Replace with API calls
-    setUsers([
-      { name: "John Doe", email: "john@example.com" },
-      { name: "Emily Smith", email: "emily@example.com" },
-    ]);
-    setGameweeks([
-      { id: 1, status: "In Progress" },
-      { id: 2, status: "Upcoming" },
-    ]);
-    setMatches([
-      {
-        date: "Aug 15, 2023",
-        home: "MUN",
-        score: "3 - 1",
-        away: "EVE",
-        status: "Finished",
-      },
-    ]);
+    // =========================================================================
+    //  API DATA POINT 2: You will replace this dummy data with a `fetch` call.
+    //  The JSON response from your API should be an array of objects.
+    // =========================================================================
+    const statsData = [ { icon: <FaTrophy />, label: "Total Predictions", value: "100" }, { icon: <FaCalculator />, label: "% Accuracy", value: "65" }, { icon: <FaFutbol />, label: "Correct Scores", value: "9" } ];
+    const teamData = { hot: [ { name: "Galactic Strikers", accuracy: "92%" }, { name: "Quantum FC", accuracy: "88%" }, { name: "Phoenix Rising", accuracy: "85%" } ], cold: [ { name: "Alexis FC", accuracy: "85%" }, { name: "Top Boys FC", accuracy: "35%" }, { name: "Slum Queens", accuracy: "30%" } ], };
+    
+    // This is the data structure your API should return for the table.
+    const gameweekData = [
+        { id: 20, predictions: 12, correctPredictions: 4, correctScores: 3, accuracy: "40%", points: 65 },
+        { id: 19, predictions: 12, correctPredictions: 4, correctScores: 3, accuracy: "40%", points: 65 },
+        { id: 18, predictions: 12, correctPredictions: 4, correctScores: 3, accuracy: "40%", points: 65 },
+        { id: 17, predictions: 12, correctPredictions: 4, correctScores: 3, accuracy: "40%", points: 65 },
+        { id: 16, predictions: 12, correctPredictions: 4, correctScores: 3, accuracy: "40%", points: 65 },
+    ];
+
+    setStats(statsData);
+    setTeams(teamData);
+    setGameweeks(gameweekData);
   }, []);
 
   return (
-      <div className="w-full max-w-6xl mx-auto py-8">
-        {/* <h1 className="text-3xl font-bold mb-8 text-center">Dashboard</h1> */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard icon={<FaUser className="text-2xl" />} label="Users" value={stats.users} />
-          <StatCard icon={<FaTrophy className="text-2xl" />} label="Leagues" value={stats.leagues} />
-          <StatCard icon={<FaCalendarAlt className="text-2xl" />} label="Gameweeks" value={stats.gameweeks} />
-          <StatCard icon={<FaFutbol className="text-2xl" />} label="Matches" value={stats.matches} />
+    // There is NO <Layout> wrapper here. Just a simple div.
+    <div className=" max-w-6xl mx-auto mt-10 w-80 sm:w-120 md:w-full">
+      <section className="bg-green-500/80  rounded-xl p-6 mb-8">
+        <h1 className="text-lg md:text-2xl font-bold mb-6 text-white">Your Overview</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {stats.map((stat, index) => (
+            <StatCard key={index} icon={stat.icon} label={stat.label} value={stat.value} />
+          ))}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="bg-[#181730] rounded-xl p-6">
-            <h2 className="font-semibold mb-4">Users</h2>
-            {users.map((user, idx) => (
-              <div key={idx} className="mb-2">
-                <span className="font-bold">{user.name}</span>
-                <span className="text-xs text-gray-400 ml-2">{user.email}</span>
-              </div>
-            ))}
-          </div>
-          <div className="bg-[#181730] rounded-xl p-6">
-            <h2 className="font-semibold mb-4">Gameweeks</h2>
-            {gameweeks.map((gw) => (
-              <div key={gw.id} className="mb-2">
-                <span className="font-bold">Gameweek {gw.id}</span>
-                <span className="ml-2 bg-emerald-600 text-xs px-2 py-1 rounded">{gw.status}</span>
+      </section>
+
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="bg-green-500/80 rounded-xl p-6">
+          <h2 className="text:lg md:text-xl font-bold mb-4 flex items-center gap-2"><FaFire className="text-orange-500" /> Your Hot Teams</h2>
+          <div className="bg-green-500 rounded-lg p-4 space-y-3">
+            {teams.hot.map((team, index) => (
+              <div key={index} className="flex justify-between items-center py-1">
+                <span className="font-semibold text-gray-200">{team.name}</span>
+                <span className="text-white">{team.accuracy}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="bg-[#181730] rounded-xl p-6">
-          <h2 className="font-semibold mb-4">Gameweek Matches</h2>
-          <table className="w-full text-left">
-            <thead>
-              <tr className="text-gray-400">
-                <th className="py-2">Date</th>
-                <th>Home Team</th>
-                <th>Score</th>
-                <th>Away Team</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {matches.map((m, idx) => (
-                <tr key={idx} className="border-t border-[#23213a]">
-                  <td className="py-2">{m.date}</td>
-                  <td>{m.home}</td>
-                  <td>{m.score}</td>
-                  <td>{m.away}</td>
-                  <td>{m.status}</td>
+        <div className="bg-green-500/80 rounded-xl p-6">
+          <h2 className="text-lg md:text-xl font-bold mb-4 flex items-center gap-2"><WiSnowflakeCold className="text-sky-400 text-2xl" /> Your Cold Teams</h2>
+            <div className="bg-green-500 rounded-lg p-4 space-y-3">
+            {teams.cold.map((team, index) => (
+              <div key={index} className="flex justify-between items-center py-1">
+                <span className="font-semibold text-gray-200">{team.name}</span>
+                <span className="text-white">{team.accuracy}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+       <section className="bg-green-500/80 rounded-xl p-2 mb-10">
+          <h2 className="text-lg md:text-2xl font-bold mb-6 text-white">Game Weeks Performance</h2>
+          <div className="overflow-x-auto bg-green-500 rounded-lg p-4">
+            <table className="w-full text-left min-w-[600px]">
+              {/* Table Header: Static content */}
+              <thead>
+                <tr className="border-b border-green-600">
+                  <th className="p-3 text-sm font-semibold text-green-100">Game Week</th>
+                  <th className="p-3 text-sm font-semibold text-green-100">Total Predictions</th>
+                  <th className="p-3 text-sm font-semibold text-green-100">Correct Predictions</th>
+                  <th className="p-3 text-sm font-semibold text-green-100">Correct Scores</th>
+                  <th className="p-3 text-sm font-semibold text-green-100">% Accuracy</th>
+                  <th className="p-3 text-sm font-semibold text-green-100">Points</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </thead>
 
-  );
-}
-
-// StatCard component for dashboard stats
-function StatCard({ icon, label, value }) {
-  return (
-    <div className="bg-[#181730] rounded-xl flex flex-col items-center justify-center py-8">
-      <div className="mb-2 text-emerald-300">{icon}</div>
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-sm text-gray-300">{label}</div>
+              {/* 
+              =========================================================================
+               API DATA POINT 3: Table Body
+               This `tbody` is dynamically generated by mapping over the `gameweeks`
+               state. When your API call updates the state, this table will re-render
+               automatically with the new data.
+              =========================================================================
+              */}
+              <tbody>
+                {gameweeks.map((gw) => (
+                  <tr key={gw.id} className="border-b border-green-600/50 last:border-none hover:bg-green-600/50 transition-colors">
+                    <td className="p-3 font-semibold text-white">GW {gw.id}</td>
+                    <td className="p-3 text-gray-100">{gw.predictions}</td>
+                    <td className="p-3 text-gray-100">{gw.correctPredictions}</td>
+                    <td className="p-3 text-gray-100">{gw.correctScores}</td>
+                    <td className="p-3 text-gray-100">{gw.accuracy}</td>
+                    <td className="p-3 font-bold text-white">{gw.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
     </div>
   );
 }
