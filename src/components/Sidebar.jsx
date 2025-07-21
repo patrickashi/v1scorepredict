@@ -75,7 +75,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <SidebarNavLink to="/help" icon={<FaQuestionCircle size={20} />} text="Help" />
           <SidebarNavLink to="/settings" icon={<FaCog size={20} />} text="Settings" />
           <Link
-            to="/logout"
+            to="/login"
             className="flex items-center space-x-4 px-6 py-3 rounded-lg text-red-300 hover:bg-red-500/30 hover:text-red-100 transition-colors font-semibold"
           >
             <FaSignOutAlt size={20} />
