@@ -119,7 +119,7 @@ export default function MyLeagues() {
           <FaTrophy /> My Leagues
         </h1>
         <div className="flex justify-center flex-wrap gap-4">
-          <button className='bg-green-500 px-4 rounded-md text-gray-100 cursor-pointer hover:scale-105 duration-200' to="/create_league">+ Create League</button>
+          <SecondaryButton to="/create_league">+ Create League</SecondaryButton>
           <SecondaryButton to="/join_league">Join League</SecondaryButton>
         </div>
       </div>

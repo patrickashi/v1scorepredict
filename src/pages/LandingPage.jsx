@@ -9,7 +9,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#222] flex flex-col">
       <NavbarLandingPage />
       {/* Hero Section */}
-      <section id="home" className="flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mx-2 md:mx-8 mt-4 p-4 md:p-12 shadow-lg relative overflow-hidden">
+      <section id="home" className="flex flex-col lg:flex-row items-center justify-center bg-green-500/80 rounded-2xl mx-2 md:mx-8 mt-4 p-4 md:p-12 shadow-lg relative overflow-hidden">
         {/* Soccer Image */}
         <div className="flex-1 flex justify-center items-center mb-8 lg:mb-0">
           <div className="rounded-full overflow-hidden shadow-2xl w-64 h-64 md:w-96 md:h-96 flex items-center justify-center bg-black/20">
@@ -41,21 +41,21 @@ export default function LandingPage() {
         <h2 className="text-2xl md:text-4xl font-bold text-center text-white mb-8">Our Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Feature 1 */}
-          <div className="bg-white/20 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:bg-white/30 transition">
+          <div className="bg-green-500/90 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:bg-white/30 transition">
             <FaTrophy className="text-yellow-400 text-4xl mb-4" />
             <h3 className="text-white text-xl font-semibold mb-2">Compete in Public and Private Leagues</h3>
             <p className="text-white/80 mb-4">Create League With Friends</p>
             <a href="/leagues" className="text-green-200 font-semibold hover:underline">Start a League &rarr;</a>
           </div>
           {/* Feature 2 */}
-          <div className="bg-white/20 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:bg-white/30 transition">
+          <div className="bg-green-500/90 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:bg-white/30 transition">
             <FaBullseye className="text-green-300 text-4xl mb-4" />
             <h3 className="text-white text-xl font-semibold mb-2">Go Big With Your Banker Pick</h3>
             <p className="text-white/80 mb-4">Guess Match Outcomes</p>
             <a href="/predictions" className="text-green-200 font-semibold hover:underline">Try a Prediction &rarr;</a>
           </div>
           {/* Feature 3 */}
-          <div className="bg-white/20 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:bg-white/30 transition">
+          <div className="bg-green-500/90 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:bg-white/30 transition">
             <FaChartBar className="text-blue-300 text-4xl mb-4" />
             <h3 className="text-white text-xl font-semibold mb-2">Boost Your Game With Personal Analytics</h3>
             <p className="text-white/80 mb-4">Gain Rank in Real Time</p>
