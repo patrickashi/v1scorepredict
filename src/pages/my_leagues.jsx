@@ -20,7 +20,7 @@ const PrimaryButton = ({ to, children }) => (
 const SecondaryButton = ({ to, children }) => (
   <Link 
     to={to}
-    className="bg-brand-green/50 text-white font-bold px-6 py-3 rounded-lg border-2 border-brand-green hover:bg-brand-green/80 transition-all transform hover:scale-105"
+    className="bg-brand-green/50 text-white font-bold px-4 md:px-6 py-3 rounded-lg border-2 border-brand-green hover:bg-brand-green/80 transition-all transform hover:scale-105"
   >
     {children}
   </Link>
@@ -118,7 +118,7 @@ export default function MyLeagues() {
         <h1 className="text-4xl font-bold text-white my-6 flex items-center justify-center gap-3">
           <FaTrophy /> My Leagues
         </h1>
-        <div className="flex justify-center flex-wrap gap-4">
+        <div className="flex justify-center flex-wrap gap-2 md:gap-4">
           <SecondaryButton to="/create_league">+ Create League</SecondaryButton>
           <SecondaryButton to="/join_league">Join League</SecondaryButton>
         </div>
