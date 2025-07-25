@@ -1,150 +1,224 @@
-// src/pages/FixturesAndPredictions.jsx
-import { useState, useEffect } from 'react';
-import { FaRegClock, FaCheckCircle, FaChevronLeft, FaChevronRight, FaSave } from "react-icons/fa";
 
-// --- Import your club logos ---
-import newcastle from "../assets/newcastle.jpeg";
-import brighton from "../assets/brighton.jpeg";
-import mancity from "../assets/mancity.jpeg";
-import liverpool from "../assets/liverpool.jpeg";
+import { useState } from 'react';
+import { FaFutbol, FaClock, FaChartLine, FaTrophy, FaFire, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
-// --- Reusable Content-Only Components ---
-
-// A single fixture/prediction card
-const FixtureCard = ({ fixture, prediction, onPredictionChange }) => (
-  <div className="bg-black/20 p-4 rounded-xl">
-    {/* Match Info: Teams & Logos */}
-    <div className="flex items-center justify-center gap-4 mb-4">
-      <div className="flex-1 text-right font-bold text-white text-sm sm:text-base">{fixture.home.code}</div>
-      <img src={fixture.home.logo} alt={fixture.home.name} className="w-8 h-8 object-contain" />
-      <span className="text-brand-gray text-xs">VS</span>
-      <img src={fixture.away.logo} alt={fixture.away.name} className="w-8 h-8 object-contain" />
-      <div className="flex-1 font-bold text-white text-sm sm:text-base">{fixture.away.code}</div>
-    </div>
-    
-    {/* Prediction Inputs */}
-    <div className="flex items-center justify-center gap-3">
-      <input
-        type="number"
-        min={0}
-        max={99}
-        className="w-16 h-12 text-center bg-black/30 text-white text-2xl font-bold rounded-lg border-2 border-transparent focus:outline-none focus:border-white/50 transition-colors"
-        value={prediction[0]}
-        onChange={(e) => onPredictionChange(fixture.id, 0, Number(e.target.value))}
-      />
-      <span className="text-2xl font-bold text-brand-gray">–</span>
-      <input
-        type="number"
-        min={0}
-        max={99}
-        className="w-16 h-12 text-center bg-black/30 text-white text-2xl font-bold rounded-lg border-2 border-transparent focus:outline-none focus:border-white/50 transition-colors"
-        value={prediction[1]}
-        onChange={(e) => onPredictionChange(fixture.id, 1, Number(e.target.value))}
-      />
-    </div>
-
-    {/* Match Date */}
-    <div className="text-center text-xs text-brand-gray mt-3">{fixture.date}</div>
-  </div>
-);
-
-
-// --- The Main FixturesAndPredictions Page Component ---
 export default function FixturesAndPredictions() {
-  const [fixtures, setFixtures] = useState([]);
-  const [predictions, setPredictions] = useState({});
-  const [isSaving, setIsSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [activeTab, setActiveTab] = useState('fixtures');
 
-  useEffect(() => {
-    // TODO: Replace this with an API call to fetch fixtures for the selected gameweek
-    const dummyFixtures = [
-      { id: 1, date: "Fri, 20 June 10:44", home: { code: "NEW", name: "Newcastle", logo: newcastle }, away: { code: "BHA", name: "Brighton", logo: brighton } },
-      { id: 2, date: "Fri, 20 June 10:44", home: { code: "MCI", name: "Man City", logo: mancity }, away: { code: "LIV", name: "Liverpool", logo: liverpool } },
-      // Add more dummy fixtures as needed
-    ];
-    setFixtures(dummyFixtures);
+  const fixtures = [
+    {
+      id: 1,
+      homeTeam: 'Manchester City',
+      awayTeam: 'Liverpool',
+      homeScore: null,
+      awayScore: null,
+      date: '2024-02-15',
+      time: '17:30',
+      status: 'upcoming',
+      prediction: { home: 45, draw: 25, away: 30 }
+    },
+    {
+      id: 2,
+      homeTeam: 'Arsenal',
+      awayTeam: 'Chelsea',
+      homeScore: 2,
+      awayScore: 1,
+      date: '2024-02-14',
+      time: '20:00',
+      status: 'finished',
+      prediction: { home: 55, draw: 20, away: 25 }
+    },
+    {
+      id: 3,
+      homeTeam: 'Newcastle',
+      awayTeam: 'Brighton',
+      homeScore: null,
+      awayScore: null,
+      date: '2024-02-16',
+      time: '15:00',
+      status: 'upcoming',
+      prediction: { home: 60, draw: 25, away: 15 }
+    }
+  ];
 
-    // Initialize predictions state based on fetched fixtures
-    const initialPredictions = dummyFixtures.reduce((acc, f) => {
-      acc[f.id] = [null, null]; // Use null for empty state
-      return acc;
-    }, {});
-    setPredictions(initialPredictions);
-  }, []);
+  const predictions = [
+    {
+      id: 1,
+      match: 'Man City vs Liverpool',
+      userPrediction: 'Liverpool Win',
+      confidence: 85,
+      potentialPoints: 15,
+      status: 'pending'
+    },
+    {
+      id: 2,
+      match: 'Arsenal vs Chelsea',
+      userPrediction: 'Arsenal Win',
+      confidence: 70,
+      potentialPoints: 12,
+      status: 'correct',
+      pointsEarned: 12
+    },
+    {
+      id: 3,
+      match: 'Newcastle vs Brighton',
+      userPrediction: 'Newcastle Win',
+      confidence: 90,
+      potentialPoints: 18,
+      status: 'pending'
+    }
+  ];
 
-  const handlePredictionChange = (fixtureId, teamIndex, value) => {
-    setPredictions(prev => ({
-      ...prev,
-      [fixtureId]: prev[fixtureId].map((v, i) => (i === teamIndex ? value : v))
-    }));
-  };
-
-  const handleSave = () => {
-    setIsSaving(true);
-    setSaved(false);
-    console.log("Saving predictions:", predictions);
-
-    // TODO: Call your real API here to post the `predictions` object
-    setTimeout(() => {
-      setIsSaving(false);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000); // Reset "Saved!" message after 3s
-    }, 1500);
-  };
-
-  return (
-    <div className="space-y-6 bg-green-500/80 py-10 px-4">
-      {/* Header and Gameweek Selector */}
-      <div className="text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Predictions</h1>
-        <p className="text-brand-gray text-sm">Make your predictions for the upcoming gameweek.</p>
+  const FixtureCard = ({ fixture }) => (
+    <div className="bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-emerald-400/30 transition-all duration-300">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-2">
+          <FaClock className="text-emerald-400" size={14} />
+          <span className="text-gray-300 text-sm">{fixture.date} at {fixture.time}</span>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+          fixture.status === 'finished' 
+            ? 'bg-green-500/20 text-green-400' 
+            : 'bg-yellow-500/20 text-yellow-400'
+        }`}>
+          {fixture.status === 'finished' ? 'Finished' : 'Upcoming'}
+        </span>
       </div>
 
-      <div className="flex items-center justify-between bg-black/20 p-2 rounded-full max-w-sm mx-auto">
-        <button className="p-2 text-brand-gray hover:text-white rounded-full"><FaChevronLeft /></button>
-        <select className="bg-black/20 px-2 rounded-md text-white font-bold text-center appearance-none focus:outline-none cursor-pointer">
-          <option className="bg-brand-dark">Gameweek 21</option>
-          <option className="bg-brand-dark">Gameweek 22</option>
-          <option className="bg-brand-dark">Gameweek 23</option>
-        </select>
-        <button className="p-2 text-brand-gray hover:text-white rounded-full"><FaChevronRight /></button>
-      </div>
-
-      {/* Main Content Card */}
-      <div className="bg-gradient-to-b from-brand-green-light to-brand-green rounded-2xl p-4 sm:p-6 shadow-lg backdrop-blur-sm border border-white/10 max-w-2xl mx-auto">
-        {/* Countdown Timer */}
-        <div className="text-center text-sm text-brand-light font-semibold mb-4 flex items-center justify-center gap-2">
-          <FaRegClock />
-          <span>03:12:09 left to predict</span>
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-center flex-1">
+          <h3 className="text-white font-semibold">{fixture.homeTeam}</h3>
+          {fixture.status === 'finished' && (
+            <div className="text-3xl font-bold text-emerald-400 mt-2">{fixture.homeScore}</div>
+          )}
         </div>
         
-        {/* Fixtures List */}
-        <div className="space-y-4">
-          {fixtures.map(fixture => (
-            <FixtureCard 
-              key={fixture.id}
-              fixture={fixture}
-              prediction={predictions[fixture.id] || [null, null]}
-              onPredictionChange={handlePredictionChange}
-            />
-          ))}
+        <div className="mx-4">
+          <FaFutbol className="text-gray-400" size={20} />
+        </div>
+        
+        <div className="text-center flex-1">
+          <h3 className="text-white font-semibold">{fixture.awayTeam}</h3>
+          {fixture.status === 'finished' && (
+            <div className="text-3xl font-bold text-emerald-400 mt-2">{fixture.awayScore}</div>
+          )}
         </div>
       </div>
 
-      {/* Save Button */}
-      <div className="max-w-2xl mx-auto">
-        <button
-          onClick={handleSave}
-          disabled={isSaving || saved}
-          className={`w-full flex items-center justify-center gap-3 text-lg font-semibold cursor-pointer  py-4 rounded-lg shadow-lg transition-all transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed ${
-            saved 
-              ? 'bg-emerald-500 text-gray-900' 
-              : 'bg-white text-gray-600'
-          }`}
-        >
-          {isSaving ? "Saving..." : saved ? <><FaCheckCircle /> Saved!</> : <><FaSave /> Save Predictions</>}
-        </button>
+      {fixture.status === 'upcoming' && (
+        <div className="bg-slate-700/50 rounded-lg p-4">
+          <h4 className="text-gray-300 text-sm mb-2">AI Prediction</h4>
+          <div className="flex justify-between text-xs">
+            <span className="text-blue-400">{fixture.homeTeam}: {fixture.prediction.home}%</span>
+            <span className="text-gray-400">Draw: {fixture.prediction.draw}%</span>
+            <span className="text-red-400">{fixture.awayTeam}: {fixture.prediction.away}%</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const PredictionCard = ({ prediction }) => (
+    <div className="bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-emerald-400/30 transition-all duration-300">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-white font-semibold">{prediction.match}</h3>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+          prediction.status === 'correct' 
+            ? 'bg-green-500/20 text-green-400' 
+            : prediction.status === 'incorrect'
+            ? 'bg-red-500/20 text-red-400'
+            : 'bg-blue-500/20 text-blue-400'
+        }`}>
+          {prediction.status === 'correct' ? 'Correct' : 
+           prediction.status === 'incorrect' ? 'Incorrect' : 'Pending'}
+        </span>
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <span className="text-gray-300">Prediction:</span>
+          <span className="text-emerald-400 font-medium">{prediction.userPrediction}</span>
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <span className="text-gray-300">Confidence:</span>
+          <div className="flex items-center space-x-2">
+            <div className="w-20 bg-slate-700 rounded-full h-2">
+              <div 
+                className="bg-emerald-400 h-2 rounded-full" 
+                style={{ width: `${prediction.confidence}%` }}
+              />
+            </div>
+            <span className="text-white text-sm">{prediction.confidence}%</span>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span className="text-gray-300">Points:</span>
+          <span className="text-emerald-400 font-bold">
+            {prediction.status === 'correct' ? `+${prediction.pointsEarned}` : prediction.potentialPoints}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
+          <FaChartLine className="text-emerald-400" />
+          Fixtures & Predictions
+        </h1>
+        <p className="text-gray-300 max-w-2xl mx-auto">
+          Stay updated with upcoming matches and track your predictions to earn points in your leagues.
+        </p>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex justify-center">
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-1">
+          <button
+            onClick={() => setActiveTab('fixtures')}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+              activeTab === 'fixtures'
+                ? 'bg-emerald-500 text-white shadow-lg'
+                : 'text-gray-300 hover:text-white'
+            }`}
+          >
+            <FaFutbol className="inline mr-2" />
+            Fixtures
+          </button>
+          <button
+            onClick={() => setActiveTab('predictions')}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+              activeTab === 'predictions'
+                ? 'bg-emerald-500 text-white shadow-lg'
+                : 'text-gray-300 hover:text-white'
+            }`}
+          >
+            <FaTrophy className="inline mr-2" />
+            My Predictions
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-4xl mx-auto">
+        {activeTab === 'fixtures' ? (
+          <div className="grid gap-6">
+            {fixtures.map((fixture) => (
+              <FixtureCard key={fixture.id} fixture={fixture} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {predictions.map((prediction) => (
+              <PredictionCard key={prediction.id} prediction={prediction} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

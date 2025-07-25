@@ -1,61 +1,153 @@
-// src/components/Layout.jsx
+
 import { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import { FaBars, FaSearch } from "react-icons/fa";
-import Sidebar from './Sidebar';
-import liverpool from '../assets/liverpool.jpeg'; // Make sure this path is correct
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { 
+  FaHome, 
+  FaTrophy, 
+  FaUsers, 
+  FaChartBar, 
+  FaSearch, 
+  FaBell,
+  FaCog,
+  FaSignOutAlt,
+  FaBars,
+  FaTimes
+} from 'react-icons/fa';
+import liverpool from '../assets/liverpool.jpeg';
 
 export default function Layout({ children }) {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
+  const navItems = [
+    { path: '/dashboard', label: 'Dashboard', icon: FaHome },
+    { path: '/home', label: 'Home', icon: FaHome },
+    { path: '/fixtures_and_predictions', label: 'Fixtures', icon: FaChartBar },
+    { path: '/my_leagues', label: 'My Leagues', icon: FaTrophy },
+    { path: '/leaderboard', label: 'Leaderboard', icon: FaUsers },
+    { path: '/join_league', label: 'Join League', icon: FaUsers },
+    { path: '/create_league', label: 'Create League', icon: FaTrophy }
+  ];
+
+  const isActivePath = (path) => location.pathname === path;
 
   return (
-    <div className="bg-[#212121] text-gray-200 min-h-screen flex">
-      {/* The Sidebar component is responsible for the left-side navigation */}
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900">
+      {/* Mobile Menu Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-      {/* Main Content Area (takes up the rest of the screen) */}
-      <div className="flex-1 flex flex-col lg:ml-64">
-        
-        {/* THIS IS THE ONLY HEADER FOR THE ENTIRE APP */}
-        <header className="bg-green-500/80 backdrop-blur-sm sticky top-0 z-20 p-4 lg:p-6 flex items-center justify-between">
-          
-          {/* Left side: Hamburger menu (mobile) and top links (desktop) */}
-          <div className="flex items-center space-x-6">
-            <button onClick={toggleSidebar} className="text-gray-100 hover:text-white lg:hidden">
-              <FaBars size={24} />
-            </button>
-            <nav className="hidden md:flex items-center space-x-6 text-gray-100 text-sm font-semibold">
-              <Link to="/fixtures_and_predictions" className="hover:text-white transition-colors">Fixtures</Link>
-              <Link to="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
-              <Link to="/prediction" className="hover:text-white transition-colors">Prediction</Link>
-              <Link to="/results" className="hover:text-white transition-colors">Results</Link>
+      <div className="flex min-h-screen">
+        {/* Sidebar */}
+        <aside className={`
+          fixed lg:static inset-y-0 left-0 z-50 w-64 
+          transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+          lg:translate-x-0 transition-transform duration-300 ease-in-out
+          bg-slate-900/95 backdrop-blur-xl border-r border-white/10
+        `}>
+          <div className="flex flex-col h-full">
+            {/* Logo */}
+            <div className="p-6 border-b border-white/10">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+                Fantasy League
+              </h1>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 p-4 space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`
+                      flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200
+                      ${isActivePath(item.path)
+                        ? 'bg-emerald-500/20 text-emerald-400 border-r-2 border-emerald-400'
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      }
+                    `}
+                  >
+                    <Icon size={18} />
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
             </nav>
-          </div>
 
-          {/* Right side: Search and User Profile */}
-          <div className="flex items-center space-x-4">
-            <button className="text-gray-100 hover:text-white p-2 rounded-full hover:bg-gray-700/50 transition-colors">
-              <FaSearch size={18} />
-            </button>
-            <Link to="/profile" className="flex items-center space-x-3">
-              <div className="relative">
-                <img src={liverpool} alt="User Avatar" className="w-9 h-9 rounded-full object-cover" />
-                <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-[#212121]"></span>
+            {/* User Settings */}
+            <div className="p-4 border-t border-white/10">
+              <Link
+                to="/profile"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200"
+              >
+                <FaCog size={18} />
+                <span>Settings</span>
+              </Link>
+              <button className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-red-500/20 hover:text-red-400 transition-all duration-200 w-full">
+                <FaSignOutAlt size={18} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col lg:ml-0">
+          {/* Header */}
+          <header className="bg-slate-900/80 backdrop-blur-xl border-b border-white/10 p-4">
+            <div className="flex items-center justify-between">
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-lg text-gray-300 hover:bg-white/10 transition-colors"
+              >
+                {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+              </button>
+
+              {/* Search Bar */}
+              <div className="hidden md:flex flex-1 max-w-md mx-8">
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    placeholder="Search leagues, players..."
+                    className="w-full bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-emerald-400 transition-colors"
+                  />
+                  <FaSearch className="absolute left-3 top-3 text-gray-400" size={14} />
+                </div>
               </div>
-              <span className="font-semibold hidden sm:inline">Alex. R</span>
-            </Link>
-          </div>
-        </header>
 
-        {/* This is where your page content (like the Dashboard) will be rendered */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-2 overflow-y-auto">
-          {children || <Outlet />}
-        </main>
+              {/* Right side: Notifications and User Profile */}
+              <div className="flex items-center space-x-4">
+                <button className="relative p-2 rounded-lg text-gray-300 hover:bg-white/10 transition-colors">
+                  <FaBell size={18} />
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                </button>
+                
+                <Link to="/profile" className="flex items-center space-x-3 hover:bg-white/10 rounded-lg p-2 transition-colors">
+                  <div className="relative">
+                    <img src={liverpool} alt="Alex R" className="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-400" />
+                    <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-emerald-500 border-2 border-slate-900"></span>
+                  </div>
+                  <span className="font-semibold text-white hidden sm:inline">Alex R</span>
+                </Link>
+              </div>
+            </div>
+          </header>
 
+          {/* Main Content Area */}
+          <main className="flex-1 p-6 overflow-y-auto">
+            <div className="max-w-7xl mx-auto">
+              {children || <Outlet />}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

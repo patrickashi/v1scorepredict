@@ -24,7 +24,7 @@ function App() {
         <Route element={<Layout />}>
           
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/home" element={<Home />} />
+          {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/fixtures_and_predictions" element={<FixturesAndPredictions />} />
           <Route path="/join_league" element={<JoinLeague />} />
           <Route path="/loader_page" element={<LoaderPage />} />
