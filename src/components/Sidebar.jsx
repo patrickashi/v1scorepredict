@@ -65,7 +65,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           No more 'active' prop is needed. It's now automatic.
         */}
         <nav className="flex-grow flex flex-col space-y-2">
-          <SidebarNavLink to="/dashboard" icon={<FaHome size={20} />} text="Hom" />
+          <SidebarNavLink to="/dashboard" icon={<FaHome size={20} />} text="Home" />
           <SidebarNavLink to="/my_leagues" icon={<FaShieldAlt size={20} />} text="Leagues" />
           <SidebarNavLink to="/gameweeks" icon={<FaCalendarAlt size={20} />} text="Game Weeks" />
           <SidebarNavLink to="/fixtures_and_predictions" icon={<FaChartBar size={20} />} text="Predictions" />
